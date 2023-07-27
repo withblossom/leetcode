@@ -34,12 +34,15 @@ strs[i] 仅由 '0' 和 '1' 组成
     //动态规划
     public static int findMaxForm(String[] strings, int m, int n) {
         int[][] dp = new int[m + 1][n + 1];
+        // 遍历物品
         for (String string : strings) {
             int zero = 0, one = 0;
             for (char c : string.toCharArray()) {
                 if (c == '0') zero++;
                 else one++;
             }
+            // 遍历背包容量且从后向前遍历！
+            //递推 dp[i][j] = Math.max(dp[i][j], dp[i - zero][j - one] + 1)
             for (int i = m; i >= zero; i--) {
                 for (int j = n; j >= one; j--) {
                     dp[i][j] = Math.max(dp[i][j], dp[i - zero][j - one] + 1);
