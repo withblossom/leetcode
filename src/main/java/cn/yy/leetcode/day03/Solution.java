@@ -4,16 +4,12 @@ import java.util.Arrays;
 
 public class Solution {
     public static int removeDuplicates(int[] nums) {
-        int len = nums.length;
-        if (len < 2) {
-            return len;
-        }
+        if (nums.length<2)return nums.length;
         int j = 1;
         int pre = nums[0];
-        for (int i = 1; i < len; i++) {
+        for (int i = 1; i < nums.length; i++) {
             if (nums[i] != pre) {
-                nums[j] = nums[i];
-                pre = nums[j];
+                pre = nums[i];
                 j++;
             }
         }
