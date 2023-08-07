@@ -10,6 +10,7 @@ package cn.yy.leetcode.solutions.day04;
 
 public class Solution43 {
 
+    //判断两棵树是不是看起来一样
     public static boolean isSameTree(TreeNode p, TreeNode q) {
         if (p == null && q==null){
             return true;
@@ -21,10 +22,13 @@ public class Solution43 {
         return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
     }
 
+    //先序遍历
     public static boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        //逻辑
         if (isSameTree(root,subRoot)) {
             return true;
         }
+        //递归
         if (root != null){
             return isSubtree(root.left,subRoot) || isSubtree(root.right,subRoot);
         }
