@@ -14,46 +14,50 @@ n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，�
 import java.util.*;
 
 public class Solution88 {
-    int count = 0;
+
+    ArrayList<List<String>> lists = new ArrayList<>();
 
     public List<List<String>> solveNQueens(int n) {
-        ArrayList<List<String>> lists = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
-            lists.add(new ArrayList<>());
+        lists.clear();
+        char[][] chars = new char[n][n];
+        for (char[] aChar : chars) {
+            Arrays.fill(aChar, '.');
         }
-        solveNQueens(lists, n, 0);
+        solveNQueens(chars, 0);
         return lists;
     }
 
-    public void solveNQueens(ArrayList<List<String>> chess, int n, int start) {
-        if (start == n + 1) {
-            count++;
+    public void solveNQueens(char[][] chars, int row) {
+        if (row == chars.length) {
+            ArrayList<String> list = new ArrayList<>();
+            for (char[] aChar : chars) {
+                list.add(new String(aChar));
+            }
+            lists.add(list);
             return;
         }
-        for (int i = start; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (isValid(chess, i, j)) {
-                    chess.get(i).set(j,"G");
-                    solveNQueens(chess, n, i + 1);
-                    chess.get(i).set(j,"");
-                }
+        for (int i = 0; i < chars.length; i++) {
+            if (isValid(chars, row, i)) {
+                chars[row][i] = 'Q';
+                solveNQueens(chars, row + 1);
+                chars[row][i] = '.';
             }
         }
     }
 
-    public boolean isValid(ArrayList<List<String>> chess, int i, int j) {
-        for (int k = 0; k <= i; k++) {
-            if ("G".equals(chess.get(k).get(j))) {
+    public boolean isValid(char[][] chars, int row, int col) {
+        for (int i = 0; i < row; i++) {
+            if (chars[i][col] == 'Q') {
                 return false;
             }
         }
-        for (int k = j - 1, l = i - 1; k >= 0 && l >= 0; k--, l--) {
-            if ("G".equals(chess.get(l).get(k))) {
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (chars[i][j] == 'Q') {
                 return false;
             }
         }
-        for (int k = j + 1, l = i - 1; k < chess.size() && l >= 0; k++, l--) {
-            if ("G".equals(chess.get(l).get(k))) {
+        for (int i = row - 1, j = col + 1; i >= 0 && j < chars.length; i--, j++) {
+            if (chars[i][j] == 'Q') {
                 return false;
             }
         }
