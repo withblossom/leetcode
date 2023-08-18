@@ -25,41 +25,58 @@ package cn.yy.leetcode.solutions.day09;
 import java.util.*;
 
 public class Solution87 {
+    //一套行程
     LinkedList<String> list = new LinkedList<>();
 
     public List<String> findItinerary(List<List<String>> tickets) {
         list.clear();
+        // map<出发点，treemap<目的地，机票张数>>
         Map<String, TreeMap<String,Integer>> map = new HashMap<>();
+        //从tickets 向map中填充数据
         for (List<String> ticket : tickets) {
             if (map.containsKey(ticket.get(0))) {
                 TreeMap<String, Integer> treeMap = map.get(ticket.get(0));
                 treeMap.put(ticket.get(1),treeMap.getOrDefault(ticket.get(1),0)+1);
             }else {
+                //treemap 可以按照键（key）按字典顺序排序
                 TreeMap<String,Integer> treeMap = new TreeMap<>();
                 treeMap.put(ticket.get(1),1);
                 map.put(ticket.get(0),treeMap);
             }
         }
+        // 向行程中加入初始点
         list.addLast("JFK");
         findItinerary(tickets,map);
         return list;
     }
     public boolean findItinerary(List<List<String>> tickets,Map<String, TreeMap<String,Integer>> map) {
+        // 找到第一套行程 ，直接返回
+        // 因为使用treemap,按照字典顺序排序，找到的第一套行程就是最好的
         if (list.size()==tickets.size()+1){
             return true;
         }
         String cur = list.getLast();
+        // 在map中找以 cur为出发点的treemap，里边包含所有以 cur为出发点的目的地，以及机票张数
         if (map.containsKey(cur)){
             TreeMap<String, Integer> treeMap = map.get(cur);
+            // 遍历treemap,挨个看该目的地能否满足要求
             for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
                 Integer count = entry.getValue();
+                // 机票数大于0
                 if (count>0){
+                    // 将该目的地加入行程，下一轮递归以该点为出发点
                     list.addLast(entry.getKey());
+                    // 机票数 减 1
                     entry.setValue(entry.getValue()-1);
+                    // 递归
                     if (findItinerary(tickets,map)) {
                         return true;
                     }
+                    // 递归中返回 false
+                    // 说明该目的地不满足，试试下一个，
+                    // 机票数变回原来的
                     entry.setValue(count);
+                    // 删除原来的一个行程
                     list.removeLast();
                 }
             }
